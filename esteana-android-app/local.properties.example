@@ -1,0 +1,10 @@
+# انسخ هذا الملف إلى local.properties وعدّل القيم.
+# local.properties لا يُرفع إلى Git (عادةً في .gitignore).
+
+sdk.dir=/path/to/your/Android/Sdk
+
+# Supabase: ضروري لحفظ FCM token وإرسال الإعدادات للـ API
+# من Dashboard: Project Settings → API → Project URL ثم أضف /functions/v1/
+SUPABASE_FUNCTIONS_URL=https://YOUR_PROJECT_REF.supabase.co/functions/v1/
+# نفس الصفحة: anon public key
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...

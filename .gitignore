@@ -1,0 +1,22 @@
+# مفاتيح وبيانات حساسة
+local.properties
+*.keystore
+*.jks
+*firebase*adminsdk*.json
+.env
+.env.*
+
+# بناء وتخزين مؤقت
+.gradle/
+build/
+**/build/
+*.iml
+.idea/
+.vscode/
+
+# Supabase CLI مؤقت
+**/supabase/.temp/
+
+# نظام التشغيل
+.DS_Store
+Thumbs.db
