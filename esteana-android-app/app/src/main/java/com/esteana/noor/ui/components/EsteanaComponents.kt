@@ -132,10 +132,7 @@ fun EsteanaApp(
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable("home") {
-                    MainScreen(
-                        modifier = Modifier.fillMaxSize(),
-                        onGetTokenClick = onGetTokenClick
-                    )
+                    MainScreen(modifier = Modifier.fillMaxSize())
                 }
                 composable("settings") {
                     SettingsScreen(

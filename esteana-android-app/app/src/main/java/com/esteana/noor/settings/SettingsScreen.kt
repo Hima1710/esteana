@@ -1,6 +1,8 @@
 package com.esteana.noor.settings
 
 import android.app.DatePickerDialog
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
@@ -26,6 +29,7 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -48,6 +52,7 @@ import com.esteana.noor.ui.components.CurrentLocationRow
 import com.esteana.noor.ui.components.EsteanaCard
 import com.esteana.noor.ui.components.EsteanaSectionTitle
 import com.esteana.noor.ui.components.EsteanaSwitchRow
+import com.esteana.noor.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -62,6 +67,7 @@ fun SettingsScreen(
     onNavigateToHome: () -> Unit = {},
     onSyncNotificationPrefs: (enabled: Boolean, frequencyHours: Int) -> Unit = { _, _ -> }
 ) {
+    val context = LocalContext.current
     val repository = LocalSettingsRepository.current
     val settings by repository.settings.collectAsState(initial = UserSettings())
     val scope = rememberCoroutineScope()
@@ -163,6 +169,23 @@ fun SettingsScreen(
                     )
                 )
             }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+        EsteanaSectionTitle(text = "عن التطبيق")
+        TextButton(
+            onClick = {
+                val url = context.getString(R.string.privacy_policy_url)
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                if (intent.resolveActivity(context.packageManager) != null) {
+                    context.startActivity(Intent.createChooser(intent, "فتح سياسة الخصوصية"))
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(Icons.Filled.Description, contentDescription = null, modifier = Modifier.size(20.dp))
+            Spacer(modifier = Modifier.size(8.dp))
+            Text("سياسة الخصوصية")
         }
 
         Spacer(modifier = Modifier.height(24.dp))

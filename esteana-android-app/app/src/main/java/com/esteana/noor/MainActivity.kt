@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -140,8 +139,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(
-    modifier: Modifier = Modifier,
-    onGetTokenClick: () -> Unit = {}
+    modifier: Modifier = Modifier
 ) {
     val repository = LocalSettingsRepository.current
     val scope = rememberCoroutineScope()
@@ -226,11 +224,5 @@ fun MainScreen(
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
-        if (BuildConfig.DEBUG) {
-            Spacer(modifier = Modifier.height(32.dp))
-            Button(onClick = onGetTokenClick, modifier = Modifier.fillMaxWidth()) {
-                Text("جلب FCM Token وطباعته في Log")
-            }
-        }
     }
 }
