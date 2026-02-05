@@ -1,6 +1,5 @@
 package com.esteana.noor.data
 
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -18,11 +17,11 @@ interface SettingsApiService {
     suspend fun getNoorData(
         @Query("lat") lat: Double = 30.04,
         @Query("lon") lon: Double = 31.23
-    ): Response<NoorDataResponse>
+    ): NoorDataResponse
 
     /** إرسال الإعدادات والحصول على المحتوى وتوقيتات الصلاة (Edge Function get-noor-data). */
     @POST("get-noor-data")
-    suspend fun sendSettings(@Body body: SettingsApiRequest): Response<NoorDataResponse>
+    suspend fun sendSettings(@Body body: SettingsApiRequest): NoorDataResponse
 }
 
 /**

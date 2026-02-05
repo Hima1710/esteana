@@ -2,8 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- صلاحية الإنترنت للاتصال بـ FCM -->
+    <!-- صلاحية الإنترنت للاتصال بـ FCM والـ WebView -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- اهتزاز خفيف (Haptic) من جسر الويب -->
+    <uses-permission android:name="android.permission.VIBRATE" />
     <!-- صلاحية الإشعارات (Android 13 / API 33 فما فوق) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- الموقع لسحب الإحداثيات تلقائياً (أوقات الصلاة والمحتوى حسب الموقع) -->

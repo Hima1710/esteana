@@ -22,6 +22,7 @@ import java.time.LocalDate
 import kotlin.coroutines.resume
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import retrofit2.HttpException
 
 private val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = "user_settings")
 
@@ -146,12 +147,10 @@ class SettingsRepository(
             target_occupation = settings.job.targetOccupation()
         )
         return try {
-            val response = api?.sendSettings(request)
-            if (response != null && response.isSuccessful) {
-                Result.success(Unit)
-            } else {
-                Result.failure(Exception(response?.message() ?: "API error"))
-            }
+            api?.sendSettings(request)
+            Result.success(Unit)
+        } catch (e: HttpException) {
+            Result.failure(Exception(e.message() ?: "API error"))
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -163,12 +162,10 @@ class SettingsRepository(
     suspend fun fetchNoorData(): Result<NoorDataResponse> {
         val (lat, lon) = getLatLon()
         return try {
-            val response = api?.getNoorData(lat, lon)
-            if (response != null && response.isSuccessful) {
-                response.body()?.let { Result.success(it) } ?: Result.failure(Exception("Empty response"))
-            } else {
-                Result.failure(Exception(response?.message() ?: "API error"))
-            }
+            val data = api?.getNoorData(lat, lon)
+            if (data != null) Result.success(data) else Result.failure(Exception("Empty response"))
+        } catch (e: HttpException) {
+            Result.failure(Exception(e.message() ?: "API error"))
         } catch (e: Exception) {
             Result.failure(e)
         }

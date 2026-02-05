@@ -1,0 +1,5 @@
+{
+  "child": ["prayer_simple", "dhikr_short", "quran_verse"],
+  "both": ["fajr", "dhuhr", "asr", "maghrib", "isha", "dhikr_morning", "quran"],
+  "adult": ["fajr", "dhuhr", "asr", "maghrib", "isha", "dhikr_morning", "dhikr_evening", "quran", "istighfar", "duaa"]
+}

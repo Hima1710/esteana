@@ -8,3 +8,6 @@ sdk.dir=/path/to/your/Android/Sdk
 SUPABASE_FUNCTIONS_URL=https://YOUR_PROJECT_REF.supabase.co/functions/v1/
 # نفس الصفحة: anon public key
 SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# عنوان تطبيق الويب (Hybrid): يُحمّل داخل WebView
+WEB_APP_URL=https://your-deployed-app.com

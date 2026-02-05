@@ -12,6 +12,8 @@ val localProperties = Properties().apply {
 val supabaseFunctionsUrl = localProperties.getProperty("SUPABASE_FUNCTIONS_URL", "https://your-api.example.com/")
     .let { if (it.endsWith("/")) it else "$it/" }
 val supabaseAnonKey = localProperties.getProperty("SUPABASE_ANON_KEY", "")
+val webAppUrl = localProperties.getProperty("WEB_APP_URL", "https://example.com")
+    .let { "\"${it.replace("\\", "\\\\").replace("\"", "\\\"")}\"" }
 
 android {
     namespace = "com.esteana.noor"
@@ -21,11 +23,12 @@ android {
         applicationId = "com.esteana.noor"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "2.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_BASE_URL", "\"${supabaseFunctionsUrl.replace("\"", "\\\"")}\"")
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"${supabaseAnonKey.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
+        buildConfigField("String", "WEB_APP_URL", webAppUrl)
     }
 
     buildTypes {

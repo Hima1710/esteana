@@ -1,5 +1,6 @@
 # مفاتيح وبيانات حساسة
 local.properties
+tokensgit
 *.keystore
 *.jks
 *firebase*adminsdk*.json
@@ -10,6 +11,7 @@ local.properties
 .gradle/
 build/
 **/build/
+**/app/release/
 *.iml
 .idea/
 .vscode/
