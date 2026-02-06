@@ -92,6 +92,7 @@ class MainActivity : ComponentActivity() {
                                     val url = request.url ?: return null
                                     if (url.host != ASSET_HOST) return null
                                     var path = url.path ?: return null
+                                    if (path.contains("quran")) Log.d("Esteana_Quran", "Request received: path=$path")
                                     if (path.isEmpty() || path == "/") path = "/index.html"
                                     val assetPath = "web" + path
                                     val mimeType = when {

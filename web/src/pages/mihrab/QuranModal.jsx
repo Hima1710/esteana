@@ -53,32 +53,52 @@ export function QuranModal({ onClose }) {
     });
   }, []);
 
+  const logTrace = useCallback((msg) => {
+    const full = '[QuranModal] ' + msg;
+    try {
+      console.log(full);
+      const b = typeof window !== 'undefined' && (window.Android || window.AndroidBridge);
+      if (b && typeof b.log === 'function') b.log(full);
+    } catch (_) {}
+  }, []);
+
   const loadQuran = useCallback(async () => {
     setError(null);
     setLoading(true);
     setSurahs([]);
     let cancelled = false;
+    logTrace('loadQuran start');
     try {
+      logTrace('calling initQuranIfEmpty');
       await initQuranIfEmpty();
       if (cancelled) return;
+      logTrace('initQuranIfEmpty done, checking empty');
       let empty = await isSurahsStoreEmpty();
+      logTrace('isSurahsStoreEmpty=' + empty);
       if (empty) {
+        logTrace('calling downloadQuranData');
         const result = await downloadQuranData();
+        logTrace('downloadQuranData result: ok=' + (result?.ok) + ' error=' + (result?.error || ''));
         if (!cancelled && result?.ok) empty = false;
       }
       if (cancelled) return;
       if (empty) {
+        logTrace('empty after load, setting error');
         setError(t.mihrab.quranFetchError);
         return;
       }
+      logTrace('calling getSurahs');
       const list = await getSurahs();
-      if (!cancelled) setSurahs(list);
+      logTrace('getSurahs count=' + (list?.length ?? 0));
+      if (!cancelled) setSurahs(list || []);
     } catch (e) {
+      logTrace('loadQuran catch: ' + (e?.message || String(e)));
       if (!cancelled) setError(t.mihrab.quranFetchError);
     } finally {
       if (!cancelled) setLoading(false);
+      logTrace('loadQuran end');
     }
-  }, [t.mihrab.quranFetchError]);
+  }, [t.mihrab.quranFetchError, logTrace]);
 
   useEffect(() => {
     loadQuran();

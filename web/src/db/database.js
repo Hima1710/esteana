@@ -121,12 +121,14 @@ function getLocalBaseUrl() {
   return last >= 0 ? u.slice(0, last + 1) : u + (u.endsWith('/') ? '' : '/');
 }
 
-/** إرسال رسالة إلى Logcat عند التشغيل داخل أندرويد (للتتبع). */
+/** إرسال رسالة إلى Console و Logcat (للتتبع عند عدم فتح القرآن). */
 function logQuran(msg) {
+  const full = '[Quran] ' + msg;
   try {
+    console.log(full);
     if (typeof window !== 'undefined') {
       const b = window.Android || window.AndroidBridge;
-      if (b && typeof b.log === 'function') b.log('[Quran] ' + msg);
+      if (b && typeof b.log === 'function') b.log(full);
     }
   } catch (_) {}
 }
@@ -141,8 +143,9 @@ async function loadQuranFromLocalJson() {
   let flat = null;
 
   try {
-    logQuran('fetch: ' + primaryUrl);
+    logQuran('fetch start: ' + primaryUrl);
     const res = await fetch(primaryUrl);
+    logQuran('fetch done: ' + primaryUrl + ' status=' + (res && res.status));
     if (!res.ok) {
       const msg = `[Quran] فشل تحميل quran.json: HTTP ${res.status} من ${primaryUrl}`;
       logQuran('fetch fail: ' + primaryUrl + ' status=' + res.status);
@@ -153,6 +156,7 @@ async function loadQuranFromLocalJson() {
       if (!flat) return { ok: false, error: msg };
     } else {
       flat = await res.json();
+      logQuran('fetch parsed: verses=' + (Array.isArray(flat) ? flat.length : 0));
     }
   } catch (e) {
     const msg = `[Quran] خطأ عند تحميل quran.json: ${e?.message || String(e)}`;
@@ -221,7 +225,10 @@ async function loadQuranViaAndroidBridge() {
  */
 export async function downloadQuranData() {
   try {
+    const base = typeof window !== 'undefined' ? getLocalBaseUrl() : '';
+    logQuran('downloadQuranData: start | isAndroid=' + isAndroidAssetHost + ' | base=' + base);
     const empty = await isQuranStoreEmpty();
+    logQuran('downloadQuranData: isQuranStoreEmpty=' + empty);
     if (!empty) {
       logQuran('downloadQuranData: البيانات موجودة في IndexedDB، تخطي التحميل');
       return { ok: true };
