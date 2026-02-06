@@ -60,12 +60,94 @@ export async function getSettings() {
 // ——— Quran (مصحف عثماني: سجل واحد لكل سورة) ———
 const QURAN_UTHMANI_API = 'https://api.alquran.cloud/v1/quran/quran-uthmani';
 
+/** أسماء السور بالعربية (لتحويل الملف المحلي) */
+const SURAH_NAMES_AR = [
+  'الفاتحة', 'البقرة', 'آل عمران', 'النساء', 'المائدة', 'الأنعام', 'الأعراف', 'الأنفال', 'التوبة', 'يونس',
+  'هود', 'يوسف', 'الرعد', 'إبراهيم', 'الحجر', 'النحل', 'الإسراء', 'الكهف', 'مريم', 'طه',
+  'الأنبياء', 'الحج', 'المؤمنون', 'النور', 'الفرقان', 'الشعراء', 'النمل', 'القصص', 'العنكبوت', 'الروم',
+  'لقمان', 'السجدة', 'الأحزاب', 'سبأ', 'فاطر', 'يس', 'الصافات', 'ص', 'الزمر', 'غافر',
+  'فصلت', 'الشورى', 'الزخرف', 'الدخان', 'الجاثية', 'الأحقاف', 'محمد', 'الفتح', 'الحجرات', 'ق',
+  'الذاريات', 'الطور', 'النجم', 'القمر', 'الرحمن', 'الواقعة', 'الحديد', 'المجادلة', 'الحشر', 'الممتحنة',
+  'الصف', 'الجمعة', 'المنافقون', 'التغابن', 'الطلاق', 'التحريم', 'الملك', 'القلم', 'الحاقة', 'المعارج',
+  'نوح', 'الجن', 'المزمل', 'المدثر', 'القيامة', 'الإنسان', 'المرسلات', 'النبأ', 'النازعات', 'عبس',
+  'التكوير', 'الانفطار', 'المطففين', 'الانشقاق', 'البروج', 'الطارق', 'الأعلى', 'الغاشية', 'الفجر', 'البلد',
+  'الشمس', 'الليل', 'الضحى', 'الشرح', 'التين', 'العلق', 'القدر', 'البينة', 'الزلزلة', 'العاديات',
+  'القارعة', 'التكاثر', 'العصر', 'الهمزة', 'الفيل', 'قريش', 'الماعون', 'الكوثر', 'الكافرون', 'النصر',
+  'المسد', 'الإخلاص', 'الفلق', 'الناس',
+];
+
+/**
+ * يحوّل مصحفاً بصيغة مسطحة [{ id, sura, aya, text }] إلى سور بالصيغة المتوقعة في المخزن.
+ */
+function flatToSurahs(flat) {
+  if (!Array.isArray(flat) || flat.length === 0) return [];
+  const bySura = new Map();
+  for (const a of flat) {
+    const suraNum = Number(a.sura) || 1;
+    if (!bySura.has(suraNum)) {
+      bySura.set(suraNum, {
+        number: suraNum,
+        name: SURAH_NAMES_AR[suraNum - 1] || `سورة ${suraNum}`,
+        englishName: '',
+        englishNameTranslation: '',
+        revelationType: '',
+        ayahs: [],
+      });
+    }
+    const ayahNum = Number(a.aya) || 1;
+    bySura.get(suraNum).ayahs.push({
+      number: ayahNum,
+      numberInSurah: ayahNum,
+      text: a.text || '',
+    });
+  }
+  return Array.from(bySura.values()).sort((a, b) => a.number - b.number);
+}
+
+/**
+ * تحميل المصحف من الملف المحلي (مثلاً ./quran.json) — يعمل من file:// في WebView.
+ */
+async function loadQuranFromLocalJson() {
+  const base = typeof window !== 'undefined' && window.location ? window.location.href.replace(/\/[^/]*$/, '/') : '';
+  const url = base + 'quran.json';
+  const res = await fetch(url);
+  if (!res.ok) return { ok: false, error: `HTTP ${res.status}` };
+  const flat = await res.json();
+  const surahs = flatToSurahs(flat);
+  if (surahs.length === 0) return { ok: false, error: 'Empty local Quran' };
+  const db = await openMuslimJourneyDB();
+  const tx = db.transaction('quran', 'readwrite');
+  for (const s of surahs) {
+    await tx.store.put({
+      number: s.number,
+      name: s.name,
+      englishName: s.englishName || '',
+      englishNameTranslation: s.englishNameTranslation || '',
+      revelationType: s.revelationType || '',
+      ayahs: s.ayahs || [],
+    });
+  }
+  await tx.done;
+  return { ok: true };
+}
+
 export async function downloadQuranData() {
+  const isFile = typeof window !== 'undefined' && window.location?.protocol === 'file:';
+
+  // من ملف (WebView من assets): نفضّل المحلي أولاً لتجنب CORS
+  if (isFile) {
+    const local = await loadQuranFromLocalJson();
+    if (local.ok) return local;
+  }
+
   try {
     const res = await fetch(QURAN_UTHMANI_API);
     if (!res.ok) return { ok: false, error: `HTTP ${res.status}` };
     const json = await res.json();
-    if (json.code !== 200 || !json.data?.surahs?.length) return { ok: false, error: 'Invalid API response' };
+    if (json.code !== 200 || !json.data?.surahs?.length) {
+      if (isFile) return loadQuranFromLocalJson();
+      return { ok: false, error: 'Invalid API response' };
+    }
 
     const db = await openMuslimJourneyDB();
     const tx = db.transaction('quran', 'readwrite');
@@ -82,6 +164,7 @@ export async function downloadQuranData() {
     await tx.done;
     return { ok: true };
   } catch (err) {
+    if (isFile) return loadQuranFromLocalJson();
     return { ok: false, error: err?.message || 'Network error' };
   }
 }

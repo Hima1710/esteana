@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { SplashScreen } from './SplashScreen';
 import { AppLayout } from './layout/AppLayout';
 import { MihrabPage } from './pages/MihrabPage';
@@ -20,12 +20,15 @@ function AppRoutes() {
   );
 }
 
+const isFileProtocol = typeof window !== 'undefined' && window.location?.protocol === 'file:';
+
 export default function App() {
+  const Router = isFileProtocol ? HashRouter : BrowserRouter;
   return (
     <SplashScreen>
-      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <AppRoutes />
-      </BrowserRouter>
+      </Router>
     </SplashScreen>
   );
 }

@@ -66,6 +66,7 @@ class MainActivity : ComponentActivity() {
                                 javaScriptEnabled = true
                                 domStorageEnabled = true
                                 allowFileAccess = true
+                                allowFileAccessFromFileURLs = true
                                 if (Build.VERSION.SDK_INT >= 21) {
                                     mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
                                 }
