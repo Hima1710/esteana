@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.os.Build.VERSION_CODES
+import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -49,6 +51,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val activity = this
         setContent {
             EsteanaTheme {
                 AndroidView(
@@ -62,6 +65,7 @@ class MainActivity : ComponentActivity() {
                             val webAppInterface = WebAppInterface(this)
                             addJavascriptInterface(webAppInterface, "Android")
                             addJavascriptInterface(webAppInterface, "AndroidBridge")
+                            var triedRemoteFallback = false
                             webViewClient = object : WebViewClient() {
                                 override fun shouldOverrideUrlLoading(
                                     view: WebView,
@@ -70,8 +74,40 @@ class MainActivity : ComponentActivity() {
                                     view.loadUrl(request.url.toString())
                                     return true
                                 }
+
+                                override fun onReceivedError(
+                                    view: WebView,
+                                    request: WebResourceRequest,
+                                    error: WebResourceError
+                                ) {
+                                    if (Build.VERSION.SDK_INT >= VERSION_CODES.M &&
+                                        request.isForMainFrame
+                                    ) {
+                                        val url = request.url.toString()
+                                        if (url.startsWith("file:") && !triedRemoteFallback) {
+                                            triedRemoteFallback = true
+                                            view.loadUrl(BuildConfig.WEB_APP_URL)
+                                        } else {
+                                            view.loadUrl("about:blank")
+                                            view.loadDataWithBaseURL(
+                                                null,
+                                                (activity as? MainActivity)?.getOfflineErrorHtml().orEmpty(),
+                                                "text/html",
+                                                "UTF-8",
+                                                null
+                                            )
+                                        }
+                                    }
+                                }
                             }
-                            loadUrl(BuildConfig.WEB_APP_URL)
+                            val hasBundledWeb = try {
+                                context.assets.list("web")?.contains("index.html") == true
+                            } catch (_: Exception) { false }
+                            if (hasBundledWeb) {
+                                loadUrl("file:///android_asset/web/index.html")
+                            } else {
+                                loadUrl(BuildConfig.WEB_APP_URL)
+                            }
                         }
                     }
                 )
@@ -103,6 +139,53 @@ class MainActivity : ComponentActivity() {
         } else {
             logFcmToken()
         }
+    }
+
+    private fun getOfflineErrorHtml(): String {
+        val url = BuildConfig.WEB_APP_URL
+        return """
+            <!DOCTYPE html>
+            <html dir="rtl" lang="ar">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width,initial-scale=1">
+                <style>
+                    * { box-sizing: border-box; }
+                    body {
+                        margin: 0;
+                        padding: 24px;
+                        font-family: 'Segoe UI', sans-serif;
+                        background: #FAFDFC;
+                        color: #191C1C;
+                        min-height: 100vh;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        text-align: center;
+                    }
+                    h1 { font-size: 22px; margin-bottom: 12px; }
+                    p { font-size: 16px; color: #3F4948; margin-bottom: 24px; line-height: 1.5; }
+                    .btn {
+                        display: inline-block;
+                        padding: 14px 28px;
+                        background: #006A6A;
+                        color: #fff;
+                        text-decoration: none;
+                        border-radius: 12px;
+                        font-size: 16px;
+                        border: none;
+                        cursor: pointer;
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>لا يوجد اتصال بالإنترنت</h1>
+                <p>تعذّر تحميل التطبيق. تحقق من اتصالك بالشبكة ثم أعد المحاولة.</p>
+                <button class="btn" onclick="location.reload()">أعد المحاولة</button>
+            </body>
+            </html>
+        """.trimIndent()
     }
 
     private fun logFcmToken() {

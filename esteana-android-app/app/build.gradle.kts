@@ -12,7 +12,7 @@ val localProperties = Properties().apply {
 val supabaseFunctionsUrl = localProperties.getProperty("SUPABASE_FUNCTIONS_URL", "https://your-api.example.com/")
     .let { if (it.endsWith("/")) it else "$it/" }
 val supabaseAnonKey = localProperties.getProperty("SUPABASE_ANON_KEY", "")
-val webAppUrl = localProperties.getProperty("WEB_APP_URL", "https://example.com")
+val webAppUrl = localProperties.getProperty("WEB_APP_URL", "https://esteana.vercel.app")
     .let { "\"${it.replace("\\", "\\\\").replace("\"", "\\\"")}\"" }
 
 android {

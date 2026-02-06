@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# يبني تطبيق الويب وينسخه إلى أصول الأندرويد ليعمل التطبيق أوفلاين بالكامل.
+set -e
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+WEB="$ROOT/web"
+ASSETS="$ROOT/esteana-android-app/app/src/main/assets/web"
+
+echo "بناء تطبيق الويب..."
+(cd "$WEB" && npm ci --omit=optional && npm run build)
+
+echo "نسخ المخرجات إلى assets الأندرويد..."
+mkdir -p "$ASSETS"
+rm -rf "${ASSETS:?}"/*
+cp -r "$WEB/dist"/* "$ASSETS/"
+
+echo "تم. مجلد assets/web جاهز للتطبيق الأوفلاين."

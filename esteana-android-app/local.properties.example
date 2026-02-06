@@ -10,4 +10,4 @@ SUPABASE_FUNCTIONS_URL=https://YOUR_PROJECT_REF.supabase.co/functions/v1/
 SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 # عنوان تطبيق الويب (Hybrid): يُحمّل داخل WebView
-WEB_APP_URL=https://your-deployed-app.com
+WEB_APP_URL=https://esteana.vercel.app
