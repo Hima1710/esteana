@@ -55,9 +55,17 @@ export function getFCMToken() {
   });
 }
 
+/** true عند التشغيل داخل WebView الأندرويد (file:// أو app.esteana.local). */
+function isAndroidWebView() {
+  if (typeof window === 'undefined') return false;
+  const p = window.location?.protocol;
+  const h = window.location?.hostname;
+  return p === 'file:' || h === 'app.esteana.local';
+}
+
 /**
- * جلب ملف JSON من أصول الأندرويد عبر الجسر (لأن Fetch لا يدعم file:// في WebView).
- * @param {string} assetPath - مسار الملف داخل assets، مثل "web/daily_actions.json"
+ * جلب ملف JSON من أصول الأندرويد عبر الجسر (لأن Fetch قد يفشل في WebView مع file:// أو اعتراض الطلبات).
+ * @param {string} assetPath - مسار الملف داخل assets، مثل "web/quran.json" أو "web/daily_actions.json"
  * @returns {Promise<object|null>}
  */
 export function getAssetJson(assetPath) {
@@ -67,7 +75,7 @@ export function getAssetJson(assetPath) {
       return;
     }
     const bridge = window.AndroidBridge || window.Android;
-    if (!bridge?.loadAsset || window.location?.protocol !== 'file:') {
+    if (!bridge?.loadAsset || !isAndroidWebView()) {
       resolve(null);
       return;
     }

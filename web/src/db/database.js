@@ -58,7 +58,8 @@ export async function getSettings() {
 }
 
 // ——— Quran (مصحف عثماني: سجل واحد لكل سورة) ———
-const QURAN_UTHMANI_API = 'https://api.alquran.cloud/v1/quran/quran-uthmani';
+// مسار الملف: يُعتبر quran.json موجوداً في src/assets/data/؛ يُخدم من public/quran.json (ويب) و assets/web/quran.json (أندرويد).
+// نستخدم fetch للمسار المحلي فقط (بدون استيراد ثقيل) لتفادي بطء شاشة البداية.
 
 /** أسماء السور بالعربية (لتحويل الملف المحلي) */
 const SURAH_NAMES_AR = [
@@ -106,12 +107,19 @@ function flatToSurahs(flat) {
 
 /** في WebView نطلب الـ assets من هذا الأصل؛ الأندرويد يعترض الطلب ويرد من الـ assets. */
 const ANDROID_ASSET_BASE = 'https://app.esteana.local';
-/** مصدر احتياطي للمصحف عند فشل الاعتراض في أندرويد (ملف من النشر على Vercel). */
-const QURAN_FALLBACK_URL = 'https://esteana.vercel.app/quran.json';
 /** true عند التشغيل داخل أندرويد (file:// أو تحميل من app.esteana.local عبر loadDataWithBaseURL). */
 const isAndroidAssetHost = typeof window !== 'undefined' && (
   window.location?.protocol === 'file:' || window.location?.hostname === 'app.esteana.local'
 );
+
+/** يُرجع الأساس للمسارات المحلية (ويب: نفس أصل الصفحة؛ أندرويد: app.esteana.local). */
+function getLocalBaseUrl() {
+  if (typeof window === 'undefined') return '';
+  if (isAndroidAssetHost) return ANDROID_ASSET_BASE + '/';
+  const u = window.location?.href ?? '';
+  const last = u.lastIndexOf('/');
+  return last >= 0 ? u.slice(0, last + 1) : u + (u.endsWith('/') ? '' : '/');
+}
 
 /** إرسال رسالة إلى Logcat عند التشغيل داخل أندرويد (للتتبع). */
 function logQuran(msg) {
@@ -124,124 +132,110 @@ function logQuran(msg) {
 }
 
 /**
- * تحميل المصحف من ملف JSON. داخل أندرويد: أولاً app.esteana.local، عند الفشل من Vercel.
+ * تحميل المصحف من ملف JSON المحلي فقط (متوافق مع WebView الأندرويد).
+ * يُستخدم fetch للمسار المحلي دون استيراد ثقيل؛ مع try-catch ورسائل واضحة في الـ Console.
  */
 async function loadQuranFromLocalJson() {
-  const urls = isAndroidAssetHost
-    ? [`${ANDROID_ASSET_BASE}/quran.json`, QURAN_FALLBACK_URL]
-    : [(window.location?.href?.replace(/\/[^/]*$/, '/') || '') + 'quran.json'];
+  const base = getLocalBaseUrl();
+  const primaryUrl = base + 'quran.json';
   let flat = null;
-  for (const url of urls) {
-    logQuran('fetch: ' + url);
-    try {
-      const res = await fetch(url);
-      if (!res.ok) {
-        logQuran('fetch fail: ' + url + ' status=' + res.status);
-        continue;
+
+  try {
+    logQuran('fetch: ' + primaryUrl);
+    const res = await fetch(primaryUrl);
+    if (!res.ok) {
+      const msg = `[Quran] فشل تحميل quran.json: HTTP ${res.status} من ${primaryUrl}`;
+      logQuran('fetch fail: ' + primaryUrl + ' status=' + res.status);
+      console.error(msg);
+      if (isAndroidAssetHost && typeof window !== 'undefined' && (window.AndroidBridge || window.Android)?.loadAsset) {
+        flat = await loadQuranViaAndroidBridge();
       }
+      if (!flat) return { ok: false, error: msg };
+    } else {
       flat = await res.json();
-      if (Array.isArray(flat) && flat.length > 0) {
-        logQuran('fetch ok: ' + url + ' verses=' + flat.length);
-        break;
-      }
-    } catch (e) {
-      logQuran('fetch error: ' + url + ' ' + (e?.message || ''));
-      continue;
     }
+  } catch (e) {
+    const msg = `[Quran] خطأ عند تحميل quran.json: ${e?.message || String(e)}`;
+    logQuran('fetch error: ' + primaryUrl + ' ' + (e?.message || ''));
+    console.error(msg);
+    if (isAndroidAssetHost && typeof window !== 'undefined' && (window.AndroidBridge || window.Android)?.loadAsset) {
+      flat = await loadQuranViaAndroidBridge();
+    }
+    if (!flat) return { ok: false, error: msg };
   }
+
   if (!Array.isArray(flat) || flat.length === 0) {
+    const msg = '[Quran] لا توجد بيانات مصحف صالحة في الملف المحلي.';
     logQuran('loadQuranFromLocalJson: no data');
-    return { ok: false, error: 'Empty local Quran' };
+    console.error(msg);
+    return { ok: false, error: msg };
   }
   const surahs = flatToSurahs(flat);
   if (surahs.length === 0) {
+    const msg = '[Quran] تحويل الملف المحلي إلى سور فشل (صيغة غير متوقعة).';
     logQuran('loadQuranFromLocalJson: flatToSurahs empty');
-    return { ok: false, error: 'Empty local Quran' };
+    console.error(msg);
+    return { ok: false, error: msg };
   }
-  logQuran('loadQuranFromLocalJson: saving surahs=' + surahs.length);
-  const db = await openMuslimJourneyDB();
-  const tx = db.transaction('quran', 'readwrite');
-  for (const s of surahs) {
-    await tx.store.put({
-      number: s.number,
-      name: s.name,
-      englishName: s.englishName || '',
-      englishNameTranslation: s.englishNameTranslation || '',
-      revelationType: s.revelationType || '',
-      ayahs: s.ayahs || [],
-    });
-  }
-  await tx.done;
-  logQuran('loadQuranFromLocalJson: done');
-  return { ok: true };
-}
-
-export async function downloadQuranData() {
-  // داخل أندرويد: نجرب API أولاً (يعمل مع النت)، ثم المحلي (اعتراض أو Vercel)
-  if (isAndroidAssetHost) {
-    logQuran('downloadQuranData: trying API first');
-    try {
-      const res = await fetch(QURAN_UTHMANI_API);
-      if (res.ok) {
-        const json = await res.json();
-        if (json.code === 200 && json.data?.surahs?.length) {
-          logQuran('API ok: surahs=' + json.data.surahs.length);
-          const db = await openMuslimJourneyDB();
-          const tx = db.transaction('quran', 'readwrite');
-          for (const s of json.data.surahs) {
-            await tx.store.put({
-              number: s.number,
-              name: s.name,
-              englishName: s.englishName || '',
-              englishNameTranslation: s.englishNameTranslation || '',
-              revelationType: s.revelationType || '',
-              ayahs: Array.isArray(s.ayahs) ? s.ayahs : [],
-            });
-          }
-          await tx.done;
-          logQuran('downloadQuranData: saved to DB from API');
-          return { ok: true };
-        }
-      } else logQuran('API fail: status=' + res.status);
-    } catch (e) {
-      logQuran('API error: ' + (e?.message || ''));
-    }
-    logQuran('downloadQuranData: trying local (intercept + Vercel)');
-    const local = await loadQuranFromLocalJson();
-    if (local.ok) {
-      logQuran('downloadQuranData: saved to DB from local');
-      return local;
-    }
-    logQuran('downloadQuranData: all failed');
-    return { ok: false, error: 'Quran load failed' };
-  }
-
   try {
-    const res = await fetch(QURAN_UTHMANI_API);
-    if (!res.ok) return { ok: false, error: `HTTP ${res.status}` };
-    const json = await res.json();
-    if (json.code !== 200 || !json.data?.surahs?.length) {
-      if (isAndroidAssetHost) return loadQuranFromLocalJson();
-      return { ok: false, error: 'Invalid API response' };
-    }
-
+    logQuran('loadQuranFromLocalJson: saving surahs=' + surahs.length);
     const db = await openMuslimJourneyDB();
     const tx = db.transaction('quran', 'readwrite');
-    for (const s of json.data.surahs) {
+    for (const s of surahs) {
       await tx.store.put({
         number: s.number,
         name: s.name,
         englishName: s.englishName || '',
         englishNameTranslation: s.englishNameTranslation || '',
         revelationType: s.revelationType || '',
-        ayahs: Array.isArray(s.ayahs) ? s.ayahs : [],
+        ayahs: s.ayahs || [],
       });
     }
     await tx.done;
+    logQuran('loadQuranFromLocalJson: done');
     return { ok: true };
   } catch (err) {
-    if (isAndroidAssetHost) return loadQuranFromLocalJson();
-    return { ok: false, error: err?.message || 'Network error' };
+    const msg = `[Quran] فشل حفظ المصحف في IndexedDB: ${err?.message || String(err)}`;
+    console.error(msg);
+    return { ok: false, error: msg };
+  }
+}
+
+/**
+ * جلب مصحف من أصول الأندرويد عبر الجسر (عند فشل fetch في WebView).
+ */
+async function loadQuranViaAndroidBridge() {
+  try {
+    const { getAssetJson } = await import('../lib/androidBridge.js');
+    const data = await getAssetJson('web/quran.json');
+    if (Array.isArray(data) && data.length > 0) return data;
+  } catch (e) {
+    logQuran('Android bridge load fail: ' + (e?.message || ''));
+    console.error('[Quran] جلب المصحف عبر جسر الأندرويد فشل:', e?.message || e);
+  }
+  return null;
+}
+
+/**
+ * تحميل بيانات المصحف: إن وُجدت في IndexedDB لا نُعيد التحميل؛ وإلا نقرأ من الملف المحلي quran.json فقط.
+ */
+export async function downloadQuranData() {
+  try {
+    const empty = await isQuranStoreEmpty();
+    if (!empty) {
+      logQuran('downloadQuranData: البيانات موجودة في IndexedDB، تخطي التحميل');
+      return { ok: true };
+    }
+    logQuran('downloadQuranData: جلب من الملف المحلي quran.json');
+    const result = await loadQuranFromLocalJson();
+    if (result.ok) logQuran('downloadQuranData: تم التخزين في IndexedDB');
+    else logQuran('downloadQuranData: فشل - ' + (result.error || ''));
+    return result;
+  } catch (err) {
+    const msg = `[Quran] خطأ غير متوقع في تحميل المصحف: ${err?.message || String(err)}`;
+    console.error(msg);
+    logQuran('downloadQuranData: exception ' + (err?.message || ''));
+    return { ok: false, error: msg };
   }
 }
 
