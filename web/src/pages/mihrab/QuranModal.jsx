@@ -53,37 +53,40 @@ export function QuranModal({ onClose }) {
     });
   }, []);
 
-  useEffect(() => {
+  const loadQuran = useCallback(async () => {
+    setError(null);
+    setLoading(true);
     let cancelled = false;
-    (async () => {
-      try {
-        await initQuranIfEmpty();
-        if (cancelled) return;
-        let empty = await isSurahsStoreEmpty();
-        if (empty) {
-          const result = await downloadQuranData();
-          if (!cancelled && result?.ok) empty = false;
-        }
-        if (cancelled) return;
-        if (empty) {
-          setError(t.mihrab.quranFetchError);
-          setLoading(false);
-          return;
-        }
-        const list = await getSurahs();
-        if (!cancelled) {
-          setSurahs(list);
-          setLoading(false);
-        }
-      } catch (e) {
-        if (!cancelled) {
-          setError(t.mihrab.quranFetchError);
-          setLoading(false);
-        }
+    try {
+      await initQuranIfEmpty();
+      if (cancelled) return;
+      let empty = await isSurahsStoreEmpty();
+      if (empty) {
+        const result = await downloadQuranData();
+        if (!cancelled && result?.ok) empty = false;
       }
-    })();
-    return () => { cancelled = true; };
+      if (cancelled) return;
+      if (empty) {
+        setError(t.mihrab.quranFetchError);
+        setLoading(false);
+        return;
+      }
+      const list = await getSurahs();
+      if (!cancelled) {
+        setSurahs(list);
+        setLoading(false);
+      }
+    } catch (e) {
+      if (!cancelled) {
+        setError(t.mihrab.quranFetchError);
+        setLoading(false);
+      }
+    }
   }, [t.mihrab.quranFetchError]);
+
+  useEffect(() => {
+    loadQuran();
+  }, [loadQuran]);
 
   useEffect(() => {
     if (!selectedSurah) {
@@ -136,8 +139,27 @@ export function QuranModal({ onClose }) {
             <CircularProgress size={48} />
             <p style={{ marginTop: 16, color: themeTokens.onSurfaceVariant, fontSize: 14 }}>{t.mihrab.quranLoading}</p>
           </div>
-        ) : error ? (
-          <p style={{ color: tokens.error, padding: 16 }}>{error}</p>
+        ) : error || surahs.length === 0 ? (
+          <div style={{ padding: 24, textAlign: 'center' }}>
+            <p style={{ color: tokens.error, marginBottom: 16, fontSize: 15 }}>{error || t.mihrab.quranFetchError}</p>
+            <p style={{ color: themeTokens.onSurfaceVariant, fontSize: 14, marginBottom: 20 }}>{t.mihrab.quranRetryHint}</p>
+            <button
+              type="button"
+              onClick={() => loadQuran()}
+              style={{
+                padding: '12px 24px',
+                backgroundColor: tokens.primary,
+                color: tokens.onPrimary,
+                border: 'none',
+                borderRadius: shape.radiusMedium,
+                fontSize: 16,
+                fontFamily: tokens.typography.fontFamily,
+                cursor: 'pointer',
+              }}
+            >
+              {t.mihrab.retry}
+            </button>
+          </div>
         ) : !selectedSurah ? (
           <>
             <p style={{ margin: '0 0 12px', fontSize: 14, color: themeTokens.onSurfaceVariant }}>{t.mihrab.selectSurah}</p>
