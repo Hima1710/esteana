@@ -9,6 +9,7 @@ import android.util.Log
 import android.os.Build.VERSION_CODES
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
@@ -58,9 +59,16 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     factory = { context ->
                         WebView(context).apply {
+                            if (BuildConfig.DEBUG) {
+                                WebView.setWebContentsDebuggingEnabled(true)
+                            }
                             settings.apply {
                                 javaScriptEnabled = true
                                 domStorageEnabled = true
+                                allowFileAccess = true
+                                if (Build.VERSION.SDK_INT >= 21) {
+                                    mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
+                                }
                             }
                             val webAppInterface = WebAppInterface(this)
                             addJavascriptInterface(webAppInterface, "Android")
@@ -71,8 +79,7 @@ class MainActivity : ComponentActivity() {
                                     view: WebView,
                                     request: WebResourceRequest
                                 ): Boolean {
-                                    view.loadUrl(request.url.toString())
-                                    return true
+                                    return false
                                 }
 
                                 override fun onReceivedError(

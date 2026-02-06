@@ -14,4 +14,9 @@ mkdir -p "$ASSETS"
 rm -rf "${ASSETS:?}"/*
 cp -r "$WEB/dist"/* "$ASSETS/"
 
+# إزالة crossorigin من سكربت التطبيق حتى يعمل التحميل من file:// في WebView
+if [ -f "$ASSETS/index.html" ]; then
+  sed -i 's/ crossorigin//g' "$ASSETS/index.html"
+fi
+
 echo "تم. مجلد assets/web جاهز للتطبيق الأوفلاين."
