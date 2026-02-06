@@ -151,10 +151,33 @@ async function loadQuranFromLocalJson() {
 }
 
 export async function downloadQuranData() {
-  // داخل أندرويد (file:// أو app.esteana.local): نفضّل المحلي أولاً
+  // داخل أندرويد: نجرب API أولاً (يعمل مع النت)، ثم المحلي (اعتراض أو Vercel)
   if (isAndroidAssetHost) {
+    try {
+      const res = await fetch(QURAN_UTHMANI_API);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.code === 200 && json.data?.surahs?.length) {
+          const db = await openMuslimJourneyDB();
+          const tx = db.transaction('quran', 'readwrite');
+          for (const s of json.data.surahs) {
+            await tx.store.put({
+              number: s.number,
+              name: s.name,
+              englishName: s.englishName || '',
+              englishNameTranslation: s.englishNameTranslation || '',
+              revelationType: s.revelationType || '',
+              ayahs: Array.isArray(s.ayahs) ? s.ayahs : [],
+            });
+          }
+          await tx.done;
+          return { ok: true };
+        }
+      }
+    } catch (_) {}
     const local = await loadQuranFromLocalJson();
     if (local.ok) return local;
+    return { ok: false, error: 'Quran load failed' };
   }
 
   try {

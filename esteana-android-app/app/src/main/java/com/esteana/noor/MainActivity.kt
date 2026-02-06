@@ -101,12 +101,15 @@ class MainActivity : ComponentActivity() {
                                         else -> "application/octet-stream"
                                     }
                                     return try {
-                                        val stream = context.assets.open(assetPath)
+                                        val afd = context.assets.openFd(assetPath)
+                                        val stream = afd.createInputStream()
+                                        val length = afd.length.toInt()
                                         val headers = java.util.HashMap<String, String>().apply {
                                             put("Access-Control-Allow-Origin", "*")
                                             put("Cache-Control", "no-cache")
+                                            put("Content-Length", length.toString())
                                         }
-                                        if (BuildConfig.DEBUG) Log.d(TAG, "Intercept OK: $assetPath")
+                                        if (BuildConfig.DEBUG) Log.d(TAG, "Intercept OK: $assetPath ($length bytes)")
                                         WebResourceResponse(mimeType, "UTF-8", 200, "OK", headers, stream)
                                     } catch (e: Exception) {
                                         if (BuildConfig.DEBUG) Log.e(TAG, "Intercept fail: $assetPath", e)
