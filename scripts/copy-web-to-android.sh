@@ -7,7 +7,7 @@ WEB="$ROOT/web"
 ASSETS="$ROOT/esteana-android-app/app/src/main/assets/web"
 
 echo "بناء تطبيق الويب..."
-(cd "$WEB" && npm ci --omit=optional && npm run build)
+(cd "$WEB" && npm install && npm run build)
 
 echo "نسخ المخرجات إلى assets الأندرويد..."
 mkdir -p "$ASSETS"
