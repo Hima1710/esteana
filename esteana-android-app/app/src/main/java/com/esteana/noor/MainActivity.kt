@@ -91,20 +91,25 @@ class MainActivity : ComponentActivity() {
                                 ): WebResourceResponse? {
                                     val url = request.url ?: return null
                                     if (url.host != ASSET_HOST) return null
-                                    val path = url.path ?: return null
-                                    val assetPath = "web" + (if (path.startsWith("/")) path else "/$path")
+                                    var path = url.path ?: return null
+                                    if (path.isEmpty() || path == "/") path = "/index.html"
+                                    val assetPath = "web" + path
+                                    val mimeType = when {
+                                        path.endsWith(".html") -> "text/html"
+                                        path.endsWith(".js") -> "application/javascript"
+                                        path.endsWith(".json") -> "application/json"
+                                        else -> "application/octet-stream"
+                                    }
                                     return try {
                                         val stream = context.assets.open(assetPath)
-                                        val headers = mapOf("Access-Control-Allow-Origin" to "*")
-                                        WebResourceResponse(
-                                            "application/json",
-                                            "UTF-8",
-                                            200,
-                                            "OK",
-                                            headers,
-                                            stream
-                                        )
-                                    } catch (_: Exception) {
+                                        val headers = java.util.HashMap<String, String>().apply {
+                                            put("Access-Control-Allow-Origin", "*")
+                                            put("Cache-Control", "no-cache")
+                                        }
+                                        if (BuildConfig.DEBUG) Log.d(TAG, "Intercept OK: $assetPath")
+                                        WebResourceResponse(mimeType, "UTF-8", 200, "OK", headers, stream)
+                                    } catch (e: Exception) {
+                                        if (BuildConfig.DEBUG) Log.e(TAG, "Intercept fail: $assetPath", e)
                                         null
                                     }
                                 }
@@ -138,7 +143,20 @@ class MainActivity : ComponentActivity() {
                                 context.assets.list("web")?.contains("index.html") == true
                             } catch (_: Exception) { false }
                             if (hasBundledWeb) {
-                                loadUrl("file:///android_asset/web/index.html")
+                                try {
+                                    val html = context.assets.open("web/index.html")
+                                        .bufferedReader(Charsets.UTF_8).use { it.readText() }
+                                    loadDataWithBaseURL(
+                                        "https://$ASSET_HOST/",
+                                        html,
+                                        "text/html",
+                                        "UTF-8",
+                                        null
+                                    )
+                                } catch (e: Exception) {
+                                    if (BuildConfig.DEBUG) Log.e(TAG, "Load bundled web failed", e)
+                                    loadUrl("file:///android_asset/web/index.html")
+                                }
                             } else {
                                 loadUrl(BuildConfig.WEB_APP_URL)
                             }
