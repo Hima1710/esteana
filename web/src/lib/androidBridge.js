@@ -54,3 +54,51 @@ export function getFCMToken() {
     }, 10000);
   });
 }
+
+/**
+ * جلب ملف JSON من أصول الأندرويد عبر الجسر (لأن Fetch لا يدعم file:// في WebView).
+ * @param {string} assetPath - مسار الملف داخل assets، مثل "web/daily_actions.json"
+ * @returns {Promise<object|null>}
+ */
+export function getAssetJson(assetPath) {
+  return new Promise((resolve) => {
+    if (typeof window === 'undefined') {
+      resolve(null);
+      return;
+    }
+    const bridge = window.AndroidBridge || window.Android;
+    if (!bridge?.loadAsset || window.location?.protocol !== 'file:') {
+      resolve(null);
+      return;
+    }
+    if (!window.__assetLoadCallbacks__) {
+      window.__assetLoadCallbacks__ = {};
+      window.__onAssetLoaded__ = (path, base64) => {
+        const cb = window.__assetLoadCallbacks__?.[path];
+        if (!cb) return;
+        clearTimeout(cb.timeout);
+        delete window.__assetLoadCallbacks__[path];
+        try {
+          cb.resolve(JSON.parse(atob(base64)));
+        } catch {
+          cb.resolve(null);
+        }
+      };
+      window.__onAssetLoadError__ = (path) => {
+        const cb = window.__assetLoadCallbacks__?.[path];
+        if (!cb) return;
+        clearTimeout(cb.timeout);
+        delete window.__assetLoadCallbacks__[path];
+        cb.resolve(null);
+      };
+    }
+    const timeout = setTimeout(() => {
+      if (window.__assetLoadCallbacks__?.[assetPath]) {
+        delete window.__assetLoadCallbacks__[assetPath];
+        resolve(null);
+      }
+    }, 15000);
+    window.__assetLoadCallbacks__[assetPath] = { resolve, timeout };
+    bridge.loadAsset(assetPath);
+  });
+}
