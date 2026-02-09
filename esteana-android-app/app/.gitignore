@@ -1,0 +1,4 @@
+/build
+
+# مفتاح Firebase Service Account (لا ترفعه إلى Git)
+*firebase*adminsdk*.json

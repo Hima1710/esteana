@@ -18,10 +18,8 @@ migrate_working_dir/
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# .vscode
+.vscode/
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -45,5 +43,22 @@ app.*.map.json
 /android/app/release
 
 # Secrets — لا ترفع إلى Git
+local.properties
 /assets/tokensgit
 /assets/*.jks
+*.keystore
+*.jks
+*firebase*adminsdk*.json
+.env
+.env.*
+
+# بناء إضافي
+.gradle/
+**/build/
+**/app/release/
+
+# Supabase CLI مؤقت
+**/supabase/.temp/
+
+# نظام التشغيل
+Thumbs.db
