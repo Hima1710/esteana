@@ -1,0 +1,46 @@
+{
+  "categories": [
+    {
+      "id": "morning",
+      "items": [
+        { "textAr": "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ", "textEn": "We have reached the morning and the dominion belongs to Allah...", "count": 1 },
+        { "textAr": "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ", "textEn": "O Allah, by You we enter the morning...", "count": 1 },
+        { "textAr": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", "textEn": "Glory and praise be to Allah", "count": 100 },
+        { "textAr": "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", "textEn": "None has the right to be worshipped but Allah alone...", "count": 10 }
+      ]
+    },
+    {
+      "id": "evening",
+      "items": [
+        { "textAr": "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ وَالْحَمْدُ لِلَّهِ لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ", "textEn": "We have reached the evening and the dominion belongs to Allah...", "count": 1 },
+        { "textAr": "اللَّهُمَّ بِكَ أَمْسَيْنَا وَبِكَ أَصْبَحْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ", "textEn": "O Allah, by You we enter the evening...", "count": 1 },
+        { "textAr": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", "textEn": "Glory and praise be to Allah", "count": 100 },
+        { "textAr": "آمَنَ الرَّسُولُ بِمَا أُنْزِلَ إِلَيْهِ مِنْ رَبِّهِ وَالْمُؤْمِنُونَ ۚ كُلٌّ آمَنَ بِاللَّهِ وَمَلَائِكَتِهِ وَكُتُبِهِ وَرُسُلِهِ", "textEn": "The Messenger believes in what has been sent down to him...", "count": 1 }
+      ]
+    },
+    {
+      "id": "afterPrayer",
+      "items": [
+        { "textAr": "أَسْتَغْفِرُ اللَّهَ", "textEn": "I seek forgiveness from Allah", "count": 3 },
+        { "textAr": "اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ", "textEn": "O Allah, You are As-Salam and from You is peace...", "count": 1 },
+        { "textAr": "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", "textEn": "None has the right to be worshipped but Allah alone...", "count": 10 },
+        { "textAr": "سُبْحَانَ اللَّهِ وَالْحَمْدُ لِلَّهِ وَاللَّهُ أَكْبَرُ", "textEn": "Glory be to Allah, praise be to Allah, Allah is the Greatest", "count": 10 }
+      ]
+    },
+    {
+      "id": "sleep",
+      "items": [
+        { "textAr": "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا", "textEn": "In Your name, O Allah, I die and I live", "count": 1 },
+        { "textAr": "اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ", "textEn": "O Allah, protect me from Your punishment on the day You resurrect Your servants", "count": 3 },
+        { "textAr": "آمَنَ الرَّسُولُ بِمَا أُنْزِلَ إِلَيْهِ مِنْ رَبِّهِ وَالْمُؤْمِنُونَ ۚ كُلٌّ آمَنَ بِاللَّهِ وَمَلَائِكَتِهِ وَكُتُبِهِ وَرُسُلِهِ", "textEn": "The Messenger believes in what has been sent down to him...", "count": 1 }
+      ]
+    },
+    {
+      "id": "tawba",
+      "targetCount": 100,
+      "items": [
+        { "textAr": "أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ", "textEn": "I seek forgiveness from Allah the Great, there is no god but He, the Ever-Living, the Self-Subsisting, and I turn to Him in repentance", "count": 100 }
+      ]
+    }
+  ]
+}
