@@ -79,6 +79,8 @@ class _PrayerMonthScreenState extends State<PrayerMonthScreen> {
       decoration: BoxDecoration(gradient: gradient),
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        extendBody: true,
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
           title: Text(l10n.prayerTimesMonth),
           backgroundColor: Colors.transparent,

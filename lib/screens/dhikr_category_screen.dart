@@ -59,7 +59,9 @@ class DhikrCategoryScreen extends HookWidget {
         }
       });
       return () {
-        for (final n in countNotifiers) n.dispose();
+        for (final n in countNotifiers) {
+          n.dispose();
+        }
       };
     }, []);
 
@@ -100,6 +102,9 @@ class DhikrCategoryScreen extends HookWidget {
     String textFor(DhikrItem item) => isArabic ? item.textAr : item.textEn;
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
+      extendBody: true,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text(categoryTitle),
         actions: [
@@ -257,10 +262,10 @@ class DhikrCategoryScreen extends HookWidget {
   }
 
   static void _shareDhikr(AppLocalizations l10n, String text) {
-    Share.share(
-      '$text\n— ${l10n.appTitle}',
+    SharePlus.instance.share(ShareParams(
+      text: '$text\n— ${l10n.appTitle}',
       subject: l10n.dailyWisdom,
-    );
+    ));
   }
 }
 

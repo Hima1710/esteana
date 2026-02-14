@@ -2,7 +2,7 @@ import 'package:isar/isar.dart';
 
 part 'mushaf_surah.g.dart';
 
-/// بيانات سورة واحدة — مصدرها API Quran.com، مُخزّنة في Isar للعمل بدون إنترنت.
+/// بيانات سورة واحدة — المصدر الوحيد: https://quran.com/ (API). مُخزّنة في Isar للعمل بدون إنترنت.
 @collection
 class MushafSurah {
   Id id = Isar.autoIncrement;

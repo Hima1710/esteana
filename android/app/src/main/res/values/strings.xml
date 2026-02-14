@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="call_notification_channel_name">مكالمة جارية</string>
+    <string name="call_notification_title">استعانة</string>
+    <string name="call_notification_text">مكالمة المقرأة الجماعية جارية</string>
+</resources>

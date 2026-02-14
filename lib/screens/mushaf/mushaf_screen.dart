@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -20,10 +21,16 @@ class MushafScreen extends HookWidget {
 
     useEffect(() {
       void init() async {
+        if (kDebugMode) debugPrint('[Mushaf] فتح شاشة المصحف (فهرس)');
         final count = await isar.mushafSurahs.count();
+        if (kDebugMode) debugPrint('[Mushaf] عدد السور في Isar: $count');
         if (count == 0) {
+          if (kDebugMode) debugPrint('[Mushaf] جلب السور من API...');
           final ok = await fetchAndSeedMushafSurahs(isar);
-          if (!ok) error.value = true;
+          if (!ok) {
+            if (kDebugMode) debugPrint('[Mushaf] فشل جلب السور');
+            error.value = true;
+          }
         }
         loading.value = false;
       }
@@ -33,6 +40,9 @@ class MushafScreen extends HookWidget {
 
     if (loading.value) {
       return Scaffold(
+        backgroundColor: Colors.transparent,
+        extendBody: true,
+        extendBodyBehindAppBar: true,
         appBar: AppBar(title: Text(l10n.quran)),
         body: Center(
           child: Column(
@@ -49,6 +59,9 @@ class MushafScreen extends HookWidget {
 
     if (error.value) {
       return Scaffold(
+        backgroundColor: Colors.transparent,
+        extendBody: true,
+        extendBodyBehindAppBar: true,
         appBar: AppBar(title: Text(l10n.quran)),
         body: Center(
           child: Padding(

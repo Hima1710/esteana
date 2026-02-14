@@ -12,6 +12,10 @@ class PrayerCountdownWidgetKeys {
   static const String dateGregorian = 'widget_date_gregorian';
   static const String dateHijri = 'widget_date_hijri';
   static const String labelRemaining = 'widget_label_remaining';
+  /// اسم المناسبة الإسلامية القادمة (للعرض بجانب العد التنازلي).
+  static const String occasionName = 'widget_occasion_name';
+  /// عدد الأيام المتبقية للمناسبة (سلسلة جاهزة للعرض، مثل "3 أيام" أو "").
+  static const String occasionDays = 'widget_occasion_days';
   /// كل صلوات اليوم: JSON مصفوفة من { "n": "اسم الصلاة", "t": epochMillis } مرتبة زمنياً.
   /// الويدجت يختار الصلاة القادمة من توقيت الجهاز ويحدّث تلقائياً بعد كل صلاة.
   static const String prayersTodayJson = 'widget_prayers_today_json';
@@ -28,6 +32,8 @@ Future<void> updatePrayerCountdownWidget({
   required String labelRemaining,
   required DateTime today,
   required List<PrayerTimeEntry> times,
+  String? occasionName,
+  String? occasionDays,
 }) async {
   if (kIsWeb) return;
   try {
@@ -42,6 +48,8 @@ Future<void> updatePrayerCountdownWidget({
     await HomeWidget.saveWidgetData<String>(PrayerCountdownWidgetKeys.dateHijri, dateHijriLine);
     await HomeWidget.saveWidgetData<String>(PrayerCountdownWidgetKeys.labelRemaining, labelRemaining);
     await HomeWidget.saveWidgetData<String>(PrayerCountdownWidgetKeys.prayersTodayJson, json);
+    await HomeWidget.saveWidgetData<String>(PrayerCountdownWidgetKeys.occasionName, occasionName ?? '');
+    await HomeWidget.saveWidgetData<String>(PrayerCountdownWidgetKeys.occasionDays, occasionDays ?? '');
     await HomeWidget.updateWidget(qualifiedAndroidName: _qualifiedAndroidWidgetName);
   } catch (e) {
     debugPrint('PrayerCountdownWidget: $e');

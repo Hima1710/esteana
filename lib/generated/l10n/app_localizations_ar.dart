@@ -307,4 +307,165 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get version => 'الإصدار';
+
+  @override
+  String get build => 'بناء';
+
+  @override
+  String get privacyPolicy => 'سياسة الخصوصية';
+
+  @override
+  String get collectiveReading => 'المقرأة الجماعية';
+
+  @override
+  String get joinVideoCall => 'انضم للمكالمة';
+
+  @override
+  String get startVideoCall => 'ابدأ المكالمة';
+
+  @override
+  String get giveControl => 'إعطاء التحكم';
+
+  @override
+  String get controllerLabel => 'المتحكم';
+
+  @override
+  String get participants => 'المشاركون';
+
+  @override
+  String get createRoom => 'إنشاء مقرأة';
+
+  @override
+  String get joinRoom => 'انضم برمز';
+
+  @override
+  String get roomCode => 'رمز المقرأة';
+
+  @override
+  String get youAreController => 'أنت المتحكم';
+
+  @override
+  String get teacherLabel => 'المعلم';
+
+  @override
+  String get studentLabel => 'طالب';
+
+  @override
+  String get activeReadingSessions => 'المقارئ النشطة';
+
+  @override
+  String get noActiveSessions => 'لا توجد مقارئ نشطة حالياً';
+
+  @override
+  String get publicRoom => 'عامة';
+
+  @override
+  String get privateRoom => 'خاصة';
+
+  @override
+  String get createOrJoin => 'إنشاء مقرأة أو انضم برمز';
+
+  @override
+  String get endReading => 'إنهاء المقرأة';
+
+  @override
+  String get endReadingConfirm => 'هل تريد إنهاء المقرأة وحفظ السجل؟';
+
+  @override
+  String get readingEnded => 'تم إنهاء المقرأة وحفظ السجل';
+
+  @override
+  String get saveAssignmentForStudent => 'حفظ المهمة للطالب';
+
+  @override
+  String get selectStudent => 'اختر الطالب';
+
+  @override
+  String get assignmentSaved => 'تم حفظ المهمة';
+
+  @override
+  String get noStudentsToAssign => 'لا يوجد طالب لتعيين المهمة له';
+
+  @override
+  String get myStudyTasks => 'مهامي الدراسية';
+
+  @override
+  String get myStudyTasksHint => 'الواجبات التي عيّنها المعلم لك';
+
+  @override
+  String get noAssignments => 'لا توجد مهام بعد';
+
+  @override
+  String get tasbih => 'تسبيح';
+
+  @override
+  String get reset => 'إعادة';
+
+  @override
+  String get downloadMushafOffline => 'تحميل المصحف للعمل دون إنترنت';
+
+  @override
+  String get downloadMushafOfflineHint =>
+      'حوالي 80 ميجا. يمكنك قراءة المصحف كاملاً بدون إنترنت.';
+
+  @override
+  String downloadingPage(int current, int total) {
+    return 'صفحة $current من $total';
+  }
+
+  @override
+  String get downloadComplete => 'تم تحميل المصحف. يمكنك القراءة دون إنترنت.';
+
+  @override
+  String downloadPartial(int downloaded, int total) {
+    return 'تم تحميل $downloaded من $total صفحة. فشل الباقي (لا اتصال). اتصل بالإنترنت وأعد المحاولة لاستكمال التحميل.';
+  }
+
+  @override
+  String get downloadCancelled => 'تم إلغاء التحميل.';
+
+  @override
+  String get mushafOffline => 'المصحف (بدون إنترنت)';
+
+  @override
+  String get occasionsTitle => 'المناسبات الإسلامية';
+
+  @override
+  String daysUntilOccasion(int count) {
+    return 'باقي $count يوم';
+  }
+
+  @override
+  String get todayIsOccasion => 'اليوم';
+
+  @override
+  String daysSinceOccasion(int count) {
+    return 'مرّ منذ $count يوم';
+  }
+
+  @override
+  String get hijriDateAdjustment => 'تعديل التاريخ الهجري';
+
+  @override
+  String get hijriDateAdjustmentHint =>
+      'أضف أو اطرح يوماً واحداً إذا اختلفت الرؤية الرسمية عن الحساب الفلكي.';
+
+  @override
+  String get hijriPlusOne => '+1 يوم';
+
+  @override
+  String get hijriMinusOne => '−1 يوم';
+
+  @override
+  String hijriOffsetValue(int value) {
+    return 'التعديل: $value يوم';
+  }
+
+  @override
+  String get microphonePermissionRequired =>
+      'صلاحية الميكروفون مطلوبة لمكالمة المقرأة الجماعية.';
+
+  @override
+  String get cameraPermissionRequired =>
+      'صلاحية الكاميرا مطلوبة لمكالمة المقرأة الجماعية.';
 }

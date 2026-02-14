@@ -5,11 +5,10 @@ import '../theme/app_theme.dart';
 /// بطاقة موحدة: تدرج Teal، حواف 24dp، أيقونة، عنوان، وصف/قيمة اختياري، شريط تقدم اختياري.
 /// متوافقة مع Material 3 ونظام الألوان من الثيم.
 class AppCard extends StatelessWidget {
-  static final _shape = RoundedRectangleBorder(borderRadius: BorderRadius.circular(kShapeRadius));
-
   const AppCard({
     super.key,
     this.icon,
+    this.iconColor,
     this.title,
     this.subtitle,
     this.value,
@@ -23,6 +22,8 @@ class AppCard extends StatelessWidget {
   });
 
   final IconData? icon;
+  /// لون الأيقونة (وخلفية حاويتها إن لزم). إن لم يُحدد يُستخدم onPrimaryContainer.
+  final Color? iconColor;
   final String? title;
   final String? subtitle;
   /// قيمة عددية تظهر بخط أكبر (مثل إجمالي القطع النورانية).
@@ -59,10 +60,10 @@ class AppCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer.withValues(alpha: useTealTint ? 0.8 : 0.5),
+                      color: (iconColor ?? colorScheme.primaryContainer).withValues(alpha: iconColor != null ? 0.35 : (useTealTint ? 0.8 : 0.5)),
                       borderRadius: BorderRadius.circular(kShapeRadius),
                     ),
-                    child: Icon(icon, size: 28, color: colorScheme.onPrimaryContainer),
+                    child: Icon(icon, size: 28, color: iconColor ?? colorScheme.onPrimaryContainer),
                   ),
                   const SizedBox(width: 16),
                 ],

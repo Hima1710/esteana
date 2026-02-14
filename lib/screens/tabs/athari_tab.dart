@@ -39,61 +39,62 @@ class AthariTab extends HookWidget {
     final luminousTotal = luminousSnapshot.data ?? 0;
 
     final gradient = AppGradients.gradientFor(Theme.of(context).brightness);
+    final padding = MediaQuery.viewPaddingOf(context);
     return Container(
       width: double.infinity,
       height: double.infinity,
       decoration: BoxDecoration(gradient: gradient),
-      child: SafeArea(
-        child: CustomScrollView(
-          cacheExtent: 400,
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const _AthariHeader(),
-                    _GuestSyncBanner(),
-                    const SizedBox(height: 20),
-                    const _TodayChallengeCard(),
-                    const SizedBox(height: 16),
-                    _ProgressBar(progress: progress),
-                    const SizedBox(height: 6),
-                    Text(
-                      l10n.progressMsg(weeklyDoneCount).toLocaleDigits(Localizations.localeOf(context)),
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85),
-                      ),
+      child: CustomScrollView(
+        cacheExtent: 400,
+        slivers: [
+          SliverPadding(padding: EdgeInsets.only(top: padding.top)),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const _AthariHeader(),
+                  _GuestSyncBanner(),
+                  const SizedBox(height: 20),
+                  const _TodayChallengeCard(),
+                  const SizedBox(height: 16),
+                  _ProgressBar(progress: progress),
+                  const SizedBox(height: 6),
+                  Text(
+                    l10n.progressMsg(weeklyDoneCount).toLocaleDigits(Localizations.localeOf(context)),
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85),
                     ),
-                    const SizedBox(height: 12),
-                    _LuminousPiecesRow(
-                      total: luminousTotal,
-                      l10n: l10n,
+                  ),
+                  const SizedBox(height: 12),
+                  _LuminousPiecesRow(
+                    total: luminousTotal,
+                    l10n: l10n,
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    l10n.myDailyTasks,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.95),
                     ),
-                    const SizedBox(height: 20),
-                    Text(
-                      l10n.myDailyTasks,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.95),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 8),
+                ],
               ),
             ),
-            _DailyTasksSliver(
-              tasks: tasks,
-              isLoading: !tasksSnapshot.hasData,
-              isar: isar,
-              l10n: l10n,
-            ),
-          ],
-        ),
+          ),
+          _DailyTasksSliver(
+            tasks: tasks,
+            isLoading: !tasksSnapshot.hasData,
+            isar: isar,
+            l10n: l10n,
+          ),
+          SliverPadding(padding: EdgeInsets.only(bottom: padding.bottom + 100)),
+        ],
       ),
     );
   }
@@ -412,7 +413,7 @@ class _DailyTasksSliver extends StatelessWidget {
     if (isLoading) {
       return SliverToBoxAdapter(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           child: Card(
             shape: _taskCardShape,
             child: Padding(
@@ -427,7 +428,7 @@ class _DailyTasksSliver extends StatelessWidget {
       final theme = Theme.of(context);
       return SliverToBoxAdapter(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Card.filled(
             shape: _taskCardShape,
             color: colorScheme.surfaceContainerHigh,
@@ -457,7 +458,7 @@ class _DailyTasksSliver extends StatelessWidget {
       );
     }
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {

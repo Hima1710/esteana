@@ -1,10 +1,31 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!--
+      أذونات مضمّنة لسياسة Google Play — يُطلب الحساس منها في وقت التشغيل عند الحاجة فقط.
+      INTERNET: الاتصال بالإنترنت (Supabase، Jitsi، تحميل المصحف، تحديد القبلة).
+      ACCESS_FINE_LOCATION: تحديد اتجاه القبلة فقط (شاشة القبلة) — يُطلب عند فتح الشاشة.
+      CAMERA / RECORD_AUDIO / MODIFY_AUDIO_SETTINGS: مكالمات الفيديو/الصوت في المقرأة الجماعية (Jitsi) — يُطلب عند الانضمام للمكالمة.
+      FOREGROUND_SERVICE*: مطلوبة لأندرويد 14+ عند استخدام الخدمات الأمامية (مكالمات Jitsi — صوت/فيديو/مشاركة شاشة).
+    -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <!-- أذونات الخدمات الأمامية — إعلان صريح لاستخدامها في المقرأة الجماعية (Jitsi). -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
     <application
+        tools:replace="android:label"
         android:label="استعانة"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:hardwareAccelerated="true"
+        android:enableOnBackInvokedCallback="true"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -26,7 +47,25 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- استقبال إعادة التوجيه من تسجيل الدخول بجوجل (Supabase OAuth) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="com.esteana.noor" android:host="login-callback" android:pathPrefix="/"/>
+            </intent-filter>
         </activity>
+        <!-- Jitsi: نوع الخدمة الأمامية لظهور مؤشر الميكروفون/الكاميرا في شريط الحالة (أندرويد 14+). -->
+        <service
+            android:name="org.jitsi.meet.sdk.JitsiMeetOngoingConferenceService"
+            android:foregroundServiceType="microphone|camera|mediaPlayback"
+            android:exported="false"
+            tools:replace="android:foregroundServiceType" />
+        <!-- خدمة أمامية نبدأها عند الدخول لمكالمة Jitsi لضمان ظهور المؤشر الأخضر للميكروفون (أندرويد 14+). -->
+        <service
+            android:name=".CallForegroundService"
+            android:foregroundServiceType="microphone"
+            android:exported="false" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

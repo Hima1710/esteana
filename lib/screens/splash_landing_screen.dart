@@ -16,6 +16,9 @@ class SplashLandingScreen extends HookWidget {
     final colorScheme = theme.colorScheme;
     final gradient = AppGradients.gradientFor(theme.brightness);
     return Scaffold(
+      backgroundColor: Colors.transparent,
+      extendBody: true,
+      extendBodyBehindAppBar: true,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -30,7 +33,7 @@ class SplashLandingScreen extends HookWidget {
                   'assets/newesteanalogo.png',
                   fit: BoxFit.contain,
                   height: 180,
-                  errorBuilder: (_, __, ___) => Icon(
+                  errorBuilder: (context, error, stackTrace) => Icon(
                     Icons.menu_book_rounded,
                     size: 120,
                     color: colorScheme.onSurface.withValues(alpha: 0.9),

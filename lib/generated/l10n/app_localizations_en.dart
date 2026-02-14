@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Istiana';
+  String get appTitle => 'Esteana';
 
   @override
   String get startJourney => 'Start My Journey';
@@ -312,4 +312,165 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get version => 'Version';
+
+  @override
+  String get build => 'Build';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get collectiveReading => 'Collective Reading';
+
+  @override
+  String get joinVideoCall => 'Join video call';
+
+  @override
+  String get startVideoCall => 'Start video call';
+
+  @override
+  String get giveControl => 'Give control';
+
+  @override
+  String get controllerLabel => 'Controller';
+
+  @override
+  String get participants => 'Participants';
+
+  @override
+  String get createRoom => 'Create reading session';
+
+  @override
+  String get joinRoom => 'Join with code';
+
+  @override
+  String get roomCode => 'Room code';
+
+  @override
+  String get youAreController => 'You are the controller';
+
+  @override
+  String get teacherLabel => 'Teacher';
+
+  @override
+  String get studentLabel => 'Student';
+
+  @override
+  String get activeReadingSessions => 'Active reading sessions';
+
+  @override
+  String get noActiveSessions => 'No active sessions at the moment';
+
+  @override
+  String get publicRoom => 'Public';
+
+  @override
+  String get privateRoom => 'Private';
+
+  @override
+  String get createOrJoin => 'Create or join with code';
+
+  @override
+  String get endReading => 'End reading';
+
+  @override
+  String get endReadingConfirm => 'End the reading session and save to log?';
+
+  @override
+  String get readingEnded => 'Reading ended and saved to log';
+
+  @override
+  String get saveAssignmentForStudent => 'Save assignment for student';
+
+  @override
+  String get selectStudent => 'Select student';
+
+  @override
+  String get assignmentSaved => 'Assignment saved';
+
+  @override
+  String get noStudentsToAssign => 'No student to assign to';
+
+  @override
+  String get myStudyTasks => 'My study tasks';
+
+  @override
+  String get myStudyTasksHint => 'Assignments from your teacher';
+
+  @override
+  String get noAssignments => 'No assignments yet';
+
+  @override
+  String get tasbih => 'Tasbih';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get downloadMushafOffline => 'Download Mushaf for offline use';
+
+  @override
+  String get downloadMushafOfflineHint =>
+      'About 80 MB. You can read the full Quran without internet.';
+
+  @override
+  String downloadingPage(int current, int total) {
+    return 'Page $current of $total';
+  }
+
+  @override
+  String get downloadComplete => 'Mushaf downloaded. You can read offline.';
+
+  @override
+  String downloadPartial(int downloaded, int total) {
+    return 'Downloaded $downloaded of $total pages. Some failed (no connection). Connect to the internet and try again to complete.';
+  }
+
+  @override
+  String get downloadCancelled => 'Download cancelled.';
+
+  @override
+  String get mushafOffline => 'Mushaf (offline)';
+
+  @override
+  String get occasionsTitle => 'Islamic occasions';
+
+  @override
+  String daysUntilOccasion(int count) {
+    return '$count days left';
+  }
+
+  @override
+  String get todayIsOccasion => 'Today';
+
+  @override
+  String daysSinceOccasion(int count) {
+    return 'Passed $count days ago';
+  }
+
+  @override
+  String get hijriDateAdjustment => 'Hijri date adjustment';
+
+  @override
+  String get hijriDateAdjustmentHint =>
+      'Add or subtract one day if official sighting differs from calculation.';
+
+  @override
+  String get hijriPlusOne => '+1 day';
+
+  @override
+  String get hijriMinusOne => '−1 day';
+
+  @override
+  String hijriOffsetValue(int value) {
+    return 'Offset: $value day(s)';
+  }
+
+  @override
+  String get microphonePermissionRequired =>
+      'Microphone access is required for the collective reading call.';
+
+  @override
+  String get cameraPermissionRequired =>
+      'Camera access is required for the collective reading call.';
 }

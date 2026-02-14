@@ -11,7 +11,8 @@ class LuminousFloatingBox extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final totalStream = useMemoized(LuminousService.watchTotal);
+    // distinct() يقلل إعادة البناء وضغط BLASTBufferQueue على أندرويد
+    final totalStream = useMemoized(() => LuminousService.watchTotal().distinct());
     final snapshot = useStream(totalStream);
     final total = snapshot.data ?? 0;
     final pulseTrigger = useMemoized(() => LuminousService.pulseTrigger);

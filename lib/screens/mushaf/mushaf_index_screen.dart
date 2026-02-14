@@ -31,6 +31,9 @@ class MushafIndexScreen extends HookWidget {
 
     if (loading.value) {
       return Scaffold(
+        backgroundColor: Colors.transparent,
+        extendBody: true,
+        extendBodyBehindAppBar: true,
         appBar: AppBar(title: Text(l10n.mushafIndex)),
         body: Center(child: Text(l10n.mushafLoading)),
       );
@@ -38,6 +41,9 @@ class MushafIndexScreen extends HookWidget {
 
     if (surahs.value.isEmpty) {
       return Scaffold(
+        backgroundColor: Colors.transparent,
+        extendBody: true,
+        extendBodyBehindAppBar: true,
         appBar: AppBar(title: Text(l10n.mushafIndex)),
         body: Center(child: Text(l10n.noResults)),
       );
@@ -46,6 +52,9 @@ class MushafIndexScreen extends HookWidget {
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
+      extendBody: true,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(title: Text(l10n.mushafIndex)),
       body: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

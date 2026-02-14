@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'Istiana'**
+  /// **'Esteana'**
   String get appTitle;
 
   /// No description provided for @startJourney.
@@ -673,6 +673,300 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Version'**
   String get version;
+
+  /// No description provided for @build.
+  ///
+  /// In en, this message translates to:
+  /// **'Build'**
+  String get build;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @collectiveReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Collective Reading'**
+  String get collectiveReading;
+
+  /// No description provided for @joinVideoCall.
+  ///
+  /// In en, this message translates to:
+  /// **'Join video call'**
+  String get joinVideoCall;
+
+  /// No description provided for @startVideoCall.
+  ///
+  /// In en, this message translates to:
+  /// **'Start video call'**
+  String get startVideoCall;
+
+  /// No description provided for @giveControl.
+  ///
+  /// In en, this message translates to:
+  /// **'Give control'**
+  String get giveControl;
+
+  /// No description provided for @controllerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Controller'**
+  String get controllerLabel;
+
+  /// No description provided for @participants.
+  ///
+  /// In en, this message translates to:
+  /// **'Participants'**
+  String get participants;
+
+  /// No description provided for @createRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Create reading session'**
+  String get createRoom;
+
+  /// No description provided for @joinRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Join with code'**
+  String get joinRoom;
+
+  /// No description provided for @roomCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Room code'**
+  String get roomCode;
+
+  /// No description provided for @youAreController.
+  ///
+  /// In en, this message translates to:
+  /// **'You are the controller'**
+  String get youAreController;
+
+  /// No description provided for @teacherLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Teacher'**
+  String get teacherLabel;
+
+  /// No description provided for @studentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Student'**
+  String get studentLabel;
+
+  /// No description provided for @activeReadingSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Active reading sessions'**
+  String get activeReadingSessions;
+
+  /// No description provided for @noActiveSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'No active sessions at the moment'**
+  String get noActiveSessions;
+
+  /// No description provided for @publicRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Public'**
+  String get publicRoom;
+
+  /// No description provided for @privateRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Private'**
+  String get privateRoom;
+
+  /// No description provided for @createOrJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Create or join with code'**
+  String get createOrJoin;
+
+  /// No description provided for @endReading.
+  ///
+  /// In en, this message translates to:
+  /// **'End reading'**
+  String get endReading;
+
+  /// No description provided for @endReadingConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'End the reading session and save to log?'**
+  String get endReadingConfirm;
+
+  /// No description provided for @readingEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading ended and saved to log'**
+  String get readingEnded;
+
+  /// No description provided for @saveAssignmentForStudent.
+  ///
+  /// In en, this message translates to:
+  /// **'Save assignment for student'**
+  String get saveAssignmentForStudent;
+
+  /// No description provided for @selectStudent.
+  ///
+  /// In en, this message translates to:
+  /// **'Select student'**
+  String get selectStudent;
+
+  /// No description provided for @assignmentSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignment saved'**
+  String get assignmentSaved;
+
+  /// No description provided for @noStudentsToAssign.
+  ///
+  /// In en, this message translates to:
+  /// **'No student to assign to'**
+  String get noStudentsToAssign;
+
+  /// No description provided for @myStudyTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'My study tasks'**
+  String get myStudyTasks;
+
+  /// No description provided for @myStudyTasksHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignments from your teacher'**
+  String get myStudyTasksHint;
+
+  /// No description provided for @noAssignments.
+  ///
+  /// In en, this message translates to:
+  /// **'No assignments yet'**
+  String get noAssignments;
+
+  /// No description provided for @tasbih.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasbih'**
+  String get tasbih;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @downloadMushafOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Download Mushaf for offline use'**
+  String get downloadMushafOffline;
+
+  /// No description provided for @downloadMushafOfflineHint.
+  ///
+  /// In en, this message translates to:
+  /// **'About 80 MB. You can read the full Quran without internet.'**
+  String get downloadMushafOfflineHint;
+
+  /// No description provided for @downloadingPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Page {current} of {total}'**
+  String downloadingPage(int current, int total);
+
+  /// No description provided for @downloadComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Mushaf downloaded. You can read offline.'**
+  String get downloadComplete;
+
+  /// No description provided for @downloadPartial.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded {downloaded} of {total} pages. Some failed (no connection). Connect to the internet and try again to complete.'**
+  String downloadPartial(int downloaded, int total);
+
+  /// No description provided for @downloadCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Download cancelled.'**
+  String get downloadCancelled;
+
+  /// No description provided for @mushafOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Mushaf (offline)'**
+  String get mushafOffline;
+
+  /// No description provided for @occasionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Islamic occasions'**
+  String get occasionsTitle;
+
+  /// No description provided for @daysUntilOccasion.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days left'**
+  String daysUntilOccasion(int count);
+
+  /// No description provided for @todayIsOccasion.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get todayIsOccasion;
+
+  /// No description provided for @daysSinceOccasion.
+  ///
+  /// In en, this message translates to:
+  /// **'Passed {count} days ago'**
+  String daysSinceOccasion(int count);
+
+  /// No description provided for @hijriDateAdjustment.
+  ///
+  /// In en, this message translates to:
+  /// **'Hijri date adjustment'**
+  String get hijriDateAdjustment;
+
+  /// No description provided for @hijriDateAdjustmentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add or subtract one day if official sighting differs from calculation.'**
+  String get hijriDateAdjustmentHint;
+
+  /// No description provided for @hijriPlusOne.
+  ///
+  /// In en, this message translates to:
+  /// **'+1 day'**
+  String get hijriPlusOne;
+
+  /// No description provided for @hijriMinusOne.
+  ///
+  /// In en, this message translates to:
+  /// **'−1 day'**
+  String get hijriMinusOne;
+
+  /// No description provided for @hijriOffsetValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Offset: {value} day(s)'**
+  String hijriOffsetValue(int value);
+
+  /// No description provided for @microphonePermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone access is required for the collective reading call.'**
+  String get microphonePermissionRequired;
+
+  /// No description provided for @cameraPermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera access is required for the collective reading call.'**
+  String get cameraPermissionRequired;
 }
 
 class _AppLocalizationsDelegate

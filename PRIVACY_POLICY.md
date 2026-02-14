@@ -1,5 +1,5 @@
-# سياسة الخصوصية — استعانة (Istiana)
-# Privacy Policy — Istiana
+# سياسة الخصوصية — استعانة (Esteana)
+# Privacy Policy — Esteana
 
 **آخر تحديث / Last updated:** 2025
 
@@ -8,7 +8,7 @@
 ## باللغة العربية
 
 ### 1. مقدمة
-تطبيق **استعانة** («Istiana») يحترم خصوصيتك. توضح هذه الصفحة ما البيانات التي قد تُجمَع وكيف نستخدمها.
+تطبيق **استعانة** («Esteana») يحترم خصوصيتك. توضح هذه الصفحة ما البيانات التي قد تُجمَع وكيف نستخدمها.
 
 ### 2. البيانات التي نجمعها
 - **الاستخدام دون تسجيل الدخول:** يمكنك استخدام التطبيق كضيف. في هذه الحالة تُخزَّن بياناتك محلياً على جهازك فقط (مثل تقدم الأذكار، المهام اليومية، إعدادات اللغة والمظهر).
@@ -39,7 +39,7 @@
 ## In English
 
 ### 1. Introduction
-**Istiana** («استعانة») respects your privacy. This page explains what data we may collect and how we use it.
+**Esteana** («استعانة») respects your privacy. This page explains what data we may collect and how we use it.
 
 ### 2. Data We Collect
 - **Use without signing in:** You can use the app as a guest. In that case, your data (e.g. dhikr progress, daily tasks, language and theme settings) is stored only on your device.

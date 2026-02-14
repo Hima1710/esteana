@@ -16,10 +16,29 @@ class AuthChoiceScreen extends HookWidget {
   Widget build(BuildContext context) {
     final l10n = useL10n();
     final theme = Theme.of(context);
+    final auth = context.watch<AuthProvider>();
+    final didNavigateFromGoogle = useRef(false);
+    // عند العودة من تسجيل الدخول بجوجل (Deep Link) ننتقل للشاشة الرئيسية مرة واحدة
+    useEffect(() {
+      if (auth.mode != AuthMode.signedIn || didNavigateFromGoogle.value) return null;
+      didNavigateFromGoogle.value = true;
+      void go() async {
+        await _markJourneyStarted();
+        if (!context.mounted) return;
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const MainScreen()),
+        );
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) => go());
+      return null;
+    }, [auth.mode]);
     final colorScheme = theme.colorScheme;
     final gradient = AppGradients.gradientFor(theme.brightness);
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
+      extendBody: true,
+      extendBodyBehindAppBar: true,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -36,7 +55,7 @@ class AuthChoiceScreen extends HookWidget {
                       'assets/newesteanalogo.png',
                       fit: BoxFit.contain,
                       height: 80,
-                      errorBuilder: (_, __, ___) => Icon(
+                      errorBuilder: (context, error, stackTrace) => Icon(
                         Icons.menu_book_rounded,
                         size: 64,
                         color: colorScheme.onSurface.withValues(alpha: 0.9),
@@ -119,19 +138,33 @@ class AuthChoiceScreen extends HookWidget {
 
   Future<void> _onGoogleLogin(BuildContext context) async {
     final auth = context.read<AuthProvider>();
-    final ok = await auth.signInWithGoogle();
+    final (success, errorMessage) = await auth.signInWithGoogle();
     if (!context.mounted) return;
-    if (ok) {
-      await _markJourneyStarted();
-      if (!context.mounted) return;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const MainScreen()),
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('تم تسجيل الدخول بنجاح'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      // الانتقال إلى MainScreen يحدث تلقائياً عند تحديث الحالة (useEffect أعلاه)
+    } else {
+      final text = errorMessage != null && errorMessage.isNotEmpty
+          ? errorMessage
+          : 'حدث خطأ. حاول مرة أخرى';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(text),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 6),
+        ),
       );
     }
   }
 
   void _onGuest(BuildContext context) async {
-    context.read<AuthProvider>().setGuest();
+    final auth = context.read<AuthProvider>();
+    await auth.signInAsGuest();
     await _markJourneyStarted();
     if (!context.mounted) return;
     Navigator.of(context).pushReplacement(

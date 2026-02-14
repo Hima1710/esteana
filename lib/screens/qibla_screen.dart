@@ -82,12 +82,14 @@ class QiblaScreen extends HookWidget {
     }, [qiblahDirection.value]);
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
+      extendBody: true,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text(l10n.qiblaDirection),
         backgroundColor: Colors.transparent,
         foregroundColor: colorScheme.onSurface,
       ),
-      extendBodyBehindAppBar: true,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -287,8 +289,9 @@ class _CompassContent extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    // مدة أطول لتقليل ضغط BLASTBufferQueue عند repeat
     final animationController = useAnimationController(
-      duration: const Duration(milliseconds: 1200),
+      duration: const Duration(milliseconds: 2200),
       initialValue: 0,
     );
     final pulseScale = useAnimation(
@@ -325,18 +328,19 @@ class _CompassContent extends HookWidget {
           ),
         ),
         const SizedBox(height: 24),
-        AnimatedBuilder(
-          animation: Listenable.merge([animationController]),
-          builder: (context, child) {
-            return Transform.scale(
-              scale: isAligned ? pulseScale : 1,
-              child: child,
-            );
-          },
-          child: Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
+        RepaintBoundary(
+          child: AnimatedBuilder(
+            animation: Listenable.merge([animationController]),
+            builder: (context, child) {
+              return Transform.scale(
+                scale: isAligned ? pulseScale : 1,
+                child: child,
+              );
+            },
+            child: Container(
+              width: size,
+              height: size,
+              decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: colorScheme.surfaceContainerLow.withValues(alpha: 0.6),
               border: Border.all(
@@ -412,6 +416,7 @@ class _CompassContent extends HookWidget {
               ],
             ),
           ),
+        ),
         ),
         const SizedBox(height: 24),
         AnimatedContainer(

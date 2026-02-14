@@ -58,6 +58,9 @@ class DhikrScreen extends HookWidget {
     }
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
+      extendBody: true,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(title: Text(l10n.adhkar)),
       body: Container(
         width: double.infinity,

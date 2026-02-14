@@ -47,5 +47,9 @@
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location is used to calculate the Qibla direction accurately.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>التطبيق يحتاج الكاميرا للمكالمات الجماعية في المقرأة.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>التطبيق يحتاج الميكروفون للمكالمات الجماعية في المقرأة.</string>
 </dict>
 </plist>

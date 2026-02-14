@@ -6,6 +6,8 @@ import '../../providers/auth_provider.dart';
 import '../../hooks/use_l10n.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_card.dart';
+import '../assignments/my_assignments_screen.dart';
+import '../collective_reading/majlis_discover_screen.dart';
 import '../../generated/l10n/app_localizations.dart';
 import '../../services/prayer_requests_service.dart';
 
@@ -23,58 +25,59 @@ class MajlisTab extends HookWidget {
     final isLoading = !snapshot.hasData && snapshot.connectionState == ConnectionState.waiting;
 
     final gradient = AppGradients.gradientFor(Theme.of(context).brightness);
+    final padding = MediaQuery.viewPaddingOf(context);
     return Container(
       width: double.infinity,
       height: double.infinity,
       decoration: BoxDecoration(gradient: gradient),
-      child: SafeArea(
-        child: CustomScrollView(
-          cacheExtent: 400,
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.majlis,
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.95),
-                      ),
+      child: CustomScrollView(
+        cacheExtent: 400,
+        slivers: [
+          SliverPadding(padding: EdgeInsets.only(top: padding.top)),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.majlis,
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.95),
                     ),
-                    const SizedBox(height: 20),
-                    _PrayForMeIntro(),
-                    const SizedBox(height: 16),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 20),
+                  _PrayForMeIntro(),
+                  const SizedBox(height: 16),
+                ],
               ),
             ),
-            _PrayerRequestsSliver(
-              requests: requests,
-              isLoading: isLoading,
-              localPrayedIds: localPrayedIds.value,
-              onLocalPrayed: (id) {
-                localPrayedIds.value = {...localPrayedIds.value, id};
-              },
-              l10n: l10n,
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
-                    _GroupChallengesSection(),
-                  ],
-                ),
+          ),
+          _PrayerRequestsSliver(
+            requests: requests,
+            isLoading: isLoading,
+            localPrayedIds: localPrayedIds.value,
+            onLocalPrayed: (id) {
+              localPrayedIds.value = {...localPrayedIds.value, id};
+            },
+            l10n: l10n,
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  _GroupChallengesSection(),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+          SliverPadding(padding: EdgeInsets.only(bottom: padding.bottom + 100)),
+        ],
       ),
     );
   }
@@ -195,7 +198,7 @@ class _PrayerRequestsSliver extends StatelessWidget {
       );
     }
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
@@ -318,7 +321,29 @@ class _GroupChallengesSection extends HookWidget {
                 ),
                 title: Text(l10n.joinReading),
                 subtitle: Text(l10n.joinReadingHint),
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const MajlisDiscoverScreen(),
+                    ),
+                  );
+                },
+              ),
+              const Divider(height: 1),
+              ListTile(
+                leading: IconTheme(
+                  data: IconThemeData(color: Theme.of(context).colorScheme.primary),
+                  child: const Icon(Icons.assignment_rounded),
+                ),
+                title: Text(l10n.myStudyTasks),
+                subtitle: Text(l10n.myStudyTasksHint),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const MyAssignmentsScreen(),
+                    ),
+                  );
+                },
               ),
               const Divider(height: 1),
               ListTile(

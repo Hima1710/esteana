@@ -31,6 +31,9 @@ class PrayerCountdownWidgetProvider : HomeWidgetProvider() {
 
         Log.i(TAG, "onUpdate: widgetIds=${appWidgetIds.size} nextPrayer=$nextPrayerDisplay countdown=$countdownHHmm now=${System.currentTimeMillis()}")
 
+        val occasionName = widgetData.getString(KEY_OCCASION_NAME, null).orEmpty()
+        val occasionDays = widgetData.getString(KEY_OCCASION_DAYS, null).orEmpty()
+
         appWidgetIds.forEach { widgetId ->
             val views = RemoteViews(context.packageName, R.layout.prayer_countdown_widget)
             views.setTextViewText(R.id.widget_label_next, widgetData.getString(KEY_LABEL_NEXT, "الصلاة القادمة"))
@@ -38,6 +41,9 @@ class PrayerCountdownWidgetProvider : HomeWidgetProvider() {
             views.setTextViewText(R.id.widget_date_gregorian, widgetData.getString(KEY_DATE_GREGORIAN, "--"))
             views.setTextViewText(R.id.widget_date_hijri, widgetData.getString(KEY_DATE_HIJRI, "--"))
             views.setTextViewText(R.id.widget_countdown, "$labelRemaining $countdownHHmm")
+            views.setViewVisibility(R.id.widget_occasion_row, if (occasionName.isNotEmpty()) android.view.View.VISIBLE else android.view.View.GONE)
+            views.setTextViewText(R.id.widget_occasion_name, occasionName)
+            views.setTextViewText(R.id.widget_occasion_days, occasionDays)
             appWidgetManager.updateAppWidget(widgetId, views)
         }
 
@@ -154,6 +160,8 @@ class PrayerCountdownWidgetProvider : HomeWidgetProvider() {
         const val KEY_DATE_GREGORIAN = "widget_date_gregorian"
         const val KEY_DATE_HIJRI = "widget_date_hijri"
         const val KEY_LABEL_REMAINING = "widget_label_remaining"
+        const val KEY_OCCASION_NAME = "widget_occasion_name"
+        const val KEY_OCCASION_DAYS = "widget_occasion_days"
         const val KEY_PRAYERS_TODAY_JSON = "widget_prayers_today_json"
     }
 }

@@ -62,3 +62,7 @@ local.properties
 
 # نظام التشغيل
 Thumbs.db
+
+# تصدير DevTools (ملفات كبيرة)
+/errores/*.json
+key.properties

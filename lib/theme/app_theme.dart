@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// سلوك تمرير سلس — BouncingScrollPhysics على كل المنصات للانزلاق السلس.
@@ -28,6 +29,9 @@ class AppColors {
   static const Color darkBgStart = Color(0xFF0D1F1C);
   static const Color darkBgMid = Color(0xFF132A26);
   static const Color darkBgEnd = Color(0xFF1A3630);
+
+  /// لون ورق المصحف القديم — خلفية شاشات المصحف لراحة العين.
+  static const Color mushafPaper = Color(0xFFF4E9DC);
 }
 
 /// التدرج اللوني — استخدم للخلفية حسب الوضع (انظر AppGradients.gradientFor).
@@ -93,7 +97,22 @@ class AppTheme {
         backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(kShapeRadius),
+            bottomRight: Radius.circular(kShapeRadius),
+          ),
+        ),
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: brightness == Brightness.dark ? Brightness.light : Brightness.dark,
+          statusBarBrightness: brightness == Brightness.dark ? Brightness.dark : Brightness.light,
+          systemNavigationBarColor: const Color(0x00000000),
+          systemNavigationBarDividerColor: const Color(0x00000000),
+          systemNavigationBarIconBrightness: brightness == Brightness.dark ? Brightness.light : Brightness.dark,
+        ),
       ),
       navigationBarTheme: NavigationBarThemeData(
         height: 70,

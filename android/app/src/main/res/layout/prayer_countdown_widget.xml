@@ -75,4 +75,31 @@
         android:textSize="16sp"
         android:textColor="#F2FFFFFF"
         android:text="--" />
+
+    <LinearLayout
+        android:id="@+id/widget_occasion_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:gravity="start">
+
+        <TextView
+            android:id="@+id/widget_occasion_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="#D9FFFFFF"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/widget_occasion_days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textSize="13sp"
+            android:textColor="#D9FFFFFF"
+            android:text="" />
+    </LinearLayout>
 </LinearLayout>

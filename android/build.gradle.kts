@@ -14,6 +14,17 @@ rootProject.layout.buildDirectory.value(newBuildDir)
 subprojects {
     val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
+    project.afterEvaluate {
+        project.extensions.findByType(com.android.build.gradle.LibraryExtension::class.java)?.run {
+            compileSdkVersion(36)
+            // إصلاح profile build مع jitsi_meet_flutter_sdk: react-android لا ينشر profile
+            buildTypes.findByName("profile")?.matchingFallbacks?.addAll(listOf("release", "debug"))
+        }
+        project.extensions.findByType(com.android.build.gradle.AppExtension::class.java)?.run {
+            compileSdkVersion(36)
+            buildTypes.findByName("profile")?.matchingFallbacks?.addAll(listOf("release", "debug"))
+        }
+    }
 }
 subprojects {
     project.evaluationDependsOn(":app")

@@ -17,24 +17,26 @@ class ZadTab extends HookWidget {
     final gradient = AppGradients.gradientFor(Theme.of(context).brightness);
     final quote = useMemoized(() => getDailyQuoteForToday());
 
+    final padding = MediaQuery.viewPaddingOf(context);
     return Container(
       width: double.infinity,
       height: double.infinity,
       decoration: BoxDecoration(gradient: gradient),
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-              child: _DailyQuoteCard(l10n: l10n, quote: quote),
-            ),
-            const SizedBox(height: 8),
-            Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(12, padding.top + 8, 12, 0),
+            child: _DailyQuoteCard(l10n: l10n, quote: quote),
+          ),
+          const SizedBox(height: 8),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: padding.bottom + 100),
               child: _ShortClipsReels(l10n: l10n, clips: kShortClips),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -90,10 +92,10 @@ class _DailyQuoteCard extends StatelessWidget {
               color: colorScheme.primaryContainer.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(kShapeRadius),
               child: InkWell(
-                onTap: () => Share.share(
-                  '$quote\n— ${l10n.appTitle}',
+                onTap: () => SharePlus.instance.share(ShareParams(
+                  text: '$quote\n— ${l10n.appTitle}',
                   subject: l10n.dailyWisdom,
-                ),
+                )),
                 borderRadius: BorderRadius.circular(kShapeRadius),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -137,7 +139,7 @@ class _ShortClipsReels extends HookWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
             l10n.shortClips,
             style: TextStyle(
